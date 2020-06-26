@@ -10,8 +10,7 @@ Nports= int(input("Number of ports ->"))
 #print "Number of threads: "                                                              
 #threads = int(raw_input("> "))                                                           
 																						   
-#target = "https://www.hackthissite.org"                                                  
-#target = 'pythonprogramming.net'                                                         
+#target = "https://www.hackthissite.org"                                                                                                        
 							
 #Nports = int(Nports)
 
