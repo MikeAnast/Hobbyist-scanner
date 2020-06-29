@@ -2,10 +2,10 @@
 import socket
 import threading
 import queue
+import time
 
 
-
-target = input("Target to scan ->")
+target = socket.gethostbyname(input("Target to scan ->"))
 #target = 'hackthissite.org'
 Nports= int(input("Number of ports ->"))
 
@@ -38,7 +38,7 @@ def port_worker():
 #ip = socket.gethostbyname(target)
 #print(ip)
 if __name__ == "__main__":
-  
+
   print(target)
   threads = []
   open_ports = []
@@ -51,18 +51,20 @@ if __name__ == "__main__":
   for port in range(1,Nports):
     q.put(port)
 
-  for i in range(Nports):
+  start_time = time.time() 
+  for i in range(1,200):
     t = threading.Thread(target=port_worker)
     threads.append(t)
 
 
 
   for t in threads:
+    t.daemon = True
     t.start()
 
   for t in threads:
     t.join()
-
+  print("the runtime is:", float(time.time()-start_time))
   print('open ports',open_ports)
   print('closed ports',closed_ports)
 
