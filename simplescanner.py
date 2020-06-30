@@ -2,12 +2,22 @@
 import socket
 import threading
 import queue
-import time
+
 
 
 target = socket.gethostbyname(input("Target to scan ->"))
 #target = 'hackthissite.org'
 Nports= int(input("Number of ports ->"))
+
+def udpscan(target,port):
+  try:
+    udpsock = socket.socket(socket.AF_INET,socket.SOCK_DGRAM)
+    udpsock.settimeout(10)
+    udpcon = udpsock.connect((target,port))
+    print("the {} port is open".format(port))
+    return True
+  except:
+    return False
 
 
 
@@ -51,7 +61,6 @@ if __name__ == "__main__":
   for port in range(1,Nports):
     q.put(port)
 
-  start_time = time.time() 
   for i in range(1,200):
     t = threading.Thread(target=port_worker)
     threads.append(t)
@@ -64,7 +73,7 @@ if __name__ == "__main__":
 
   for t in threads:
     t.join()
-  print("the runtime is:", float(time.time()-start_time))
+
   print('open ports',open_ports)
   print('closed ports',closed_ports)
 
