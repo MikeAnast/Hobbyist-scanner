@@ -1,37 +1,26 @@
+
+
+#https://0xbharath.github.io/art-of-packet-crafting-with-scapy/network_recon/service_discovery/index.html
 import random
 from scapy.all import ICMP, IP, sr1, TCP
-
+from socket import gethostbyname
 # Define end host and TCP port range
-host = '137.74.187.103'
-port_range = [22, 23, 80, 443, 3389]
+#host = 'scanme.nmap.org'
+https://0xbharath.github.io/art-of-packet-crafting-with-scapy/network_recon/service_discovery/index.html
+host = 'hackthissite.org'
+ipdom = 137.74.187.104
+print(ipdom)
 
-# Send SYN with random Src Port for each Dst port
-for dst_port in port_range:
-    src_port = random.randint(1025,65534)
-    resp = sr1(
-        IP(dst=host)/TCP(sport=src_port,dport=dst_port,flags="S"),timeout=1,
-        verbose=0,
-    )
 
-    if resp is None:
-        print(f"{host}:{dst_port} is filtered (silently dropped).")
+# VARIABLES
+src = '160.40.49.165'
 
-    elif(resp.haslayer(TCP)):
-        if(resp.getlayer(TCP).flags == 0x12):
-            # Send a gratuitous RST to close the connection
-            send_rst = sr(
-                IP(dst=host)/TCP(sport=src_port,dport=dst_port,flags='R'),
-                timeout=1,
-                verbose=0,
-            )
-            print(f"{host}:{dst_port} is open.")
+dst = ipdom
+sport = random.randint(1024,65535)
+dport = 80
 
-        elif (resp.getlayer(TCP).flags == 0x14):
-            print(f"{host}:{dst_port} is closed.")
+syn_packet = IP(dst='137.74.187.104')/TCP(dport=80,flags='S')
+resp = sr1(syn_packet)
+resp.sprintf('%TCP.src% \t %TCP.sport% \t %TCP.flags%')
 
-    elif(resp.haslayer(ICMP)):
-        if(
-            int(resp.getlayer(ICMP).type) == 3 and
-            int(resp.getlayer(ICMP).code) in [1,2,3,9,10,13]
-        ):
-            print(f"{host}:{dst_port} is filtered (silently dropped).")
+ iptables -A OUTPUT -p tcp --tcp-flags RST RST -s 137.74.187.104 -j DROP
