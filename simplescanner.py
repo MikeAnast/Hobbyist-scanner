@@ -1,8 +1,11 @@
-
+import pyfiglet
 import socket
 import threading
 import queue
 
+
+ascii_banner = pyfiglet.figlet_format("PORT SCANNER")
+print(ascii_banner)
 
 
 target = socket.gethostbyname(input("Target to scan ->"))
