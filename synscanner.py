@@ -127,6 +127,7 @@ def port_worker():
 
 
 if __name__=='__main__':
+<<<<<<< HEAD
     #ip = socket.gethostbyname(input("Target to scan ->"))
     #target = 'hackthissite.org'
     #start_ports= int(input("Number of first port ->"))
@@ -165,6 +166,25 @@ if __name__=='__main__':
     print("open ports are:",scanner[0])
     print("closed ports are:",scanner[1])
 
+=======
+	#ip = socket.gethostbyname(input("Target to scan ->"))
+	#target = 'hackthissite.org'
+	#start_ports= int(input("Number of first port ->"))
+	#finish_ports = int(input("Number of last port ->"))
+	ip = gethostbyname('hackthissite.org')
+	start_ports = 443
+	finish_ports = 445
+	print(ip)
+	scanner = SYNscanner(ip,start_ports,finish_ports)
+	print("open ports are:",scanner[0])
+	print("closed ports are:",scanner[1])
+
+	
+	#print(scanned)
+	#print("open ports are:", scanned[0])
+	#print("scan completed in {} seconds".format(scanned[1]))
+	#print("the number of closed ports is", scanned[2])
+>>>>>>> 9c73db902adc6db12ce0e4dbd5d7c0be04129ed6
 
 
 
