@@ -4,8 +4,18 @@ logging.getLogger("scapy.runtime").setLevel(logging.ERROR) # Disable the annoyin
 from scapy.all import *
 from socket import gethostbyname
 from pyfiglet import Figlet
-logo = Figlet(font='graffiti')
+
+
+
+
+logo = Figlet(font='doom')
 print(logo.renderText('Rick the greek'))
+
+
+
+
+
+
 
 #https://www.binarytides.com/raw-socket-programming-in-python-linux/
 
@@ -25,53 +35,73 @@ ACK = 0x10
 URG = 0x20
 ECE = 0x40
 CWR = 0x80
+
+'F': 'FIN',
+'S': 'SYN',
+'R': 'RST',
+'P': 'PSH',
+'A': 'ACK',
+'U': 'URG',
+'E': 'ECE',
+'C': 'CWR',
+
 '''
 
 
 def listening(ip):
-    icmp = IP(dst=ip)/ICMP()    #pinging the ip with the protocl ICMP to see if the IP is up
-    resp = sr1(icmp,timeout=2)
-    if resp ==None:
-        return False
-    else:
-        return True
+	icmp = IP(dst=ip)/ICMP()    #pinging the ip with the protocl ICMP to see if the IP is up
+	resp = sr1(icmp,timeout=2)
+	if resp ==None:
+		return False
+	else:
+		return True
 
-def SYNscanner(ip,ports):
-    #conf.verb = 0
-    start = time.time()
-    closed_ports = 0
-    open_ports =[]
-    close = 0
-    if listening(ip):
-        print("ip is:",listening(ip))
-        for port in range(1,ports):
-            try:
-                source_port = RandShort()
-                SYNpacket = IP(dst=ip)/TCP(sport=source_port, dport = port, flags='S')  #make a SYN packet
-                responce = sr1(SYNpacket, timeout=2) #sending the packet
-                if responce.getlayer(TCP).flags==0x12:
-                    send_rst = sr(IP(dst=ip)/TCP(sport=src_port, dport=port, flags='AR'), timeout=1)
-                    open_ports.append(port)
-                elif responce.getlayer(TCP).flags ==0x14:
-                    close+=1
-            except AttributeError:
-                print("port is not listening")
-        timelance = time.time()- start
-        print("open ports are:", open_ports)
-        print("scan completed in {} seconds".format(timelance))
-        print("the number of closed ports is", close)
+def SYNscanner(ip,startports,finishports):
+	#conf.verb = 0
+	start = time.time()
+	closed_ports = []
+	open_ports =[]
+	close = 0
+	if listening(ip):
+		print("ip is:",listening(ip))
+		for port in range(startports,finishports+1):
+			try:
+				source_port = RandShort()
+				SYNpacket = IP(dst=ip)/TCP(sport=source_port, dport = port, flags='S')  #make a SYN packet
+				responce = sr1(SYNpacket, timeout=10) #sending the packet
+				if responce.getlayer(TCP).flags==0x12:
+					send_rst = sr(IP(dst=ip)/TCP(sport=source_port, dport=port, flags='AR'), timeout=1) #'AR'= ACK-RST 
+					open_ports.append(port)
+				elif responce.getlayer(TCP).flags ==0x14:
+					closed_ports.append(port)
+			except AttributeError:
+				#print("port is not listening")
+				closed_ports.append(port)
+		timelance = time.time()- start
+		return open_ports,closed_ports,timelance
+		#print("open ports are:", open_ports)
+		#print("scan completed in {} seconds".format(timelance))
+		#print("the number of closed ports is", closed_ports)
 
 
 if __name__=='__main__':
-    ip = gethostbyname('hackthissite.org')
-    ports = 3
-    print(ip)
-    SYNscanner(ip,ports)
-    
-    #print(scanned)
-    #print("open ports are:", scanned[0])
-    #print("scan completed in {} seconds".format(scanned[1]))
-    #print("the number of closed ports is", scanned[2])
+	ip = socket.gethostbyname(input("Target to scan ->"))
+	#target = 'hackthissite.org'
+	start_ports= int(input("Number of first port ->"))
+	finish_ports = int(input("Number of last port ->"))
+	#ip = gethostbyname('hackthissite.org')
+	#start_ports = 443
+	#finish_ports = 445
+	print(ip)
+	scanner = SYNscanner(ip,start_ports,finish_ports)
+	print("open ports are:",scanner[0])
+	print("closed ports are:",scanner[1])
+
+	
+	#print(scanned)
+	#print("open ports are:", scanned[0])
+	#print("scan completed in {} seconds".format(scanned[1]))
+	#print("the number of closed ports is", scanned[2])
 
 
 
