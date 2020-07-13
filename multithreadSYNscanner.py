@@ -13,15 +13,8 @@ logo = Figlet(font='doom')
 print(logo.renderText('Rick the greek'))
 
 
-
-
-
-
-
-
-
 '''
-packet = IP header + TCP header + data
+References
 https://medium.com/@NickKaramoff/tcp-packets-from-scratch-in-python-3a63f0cd59fe
 https://resources.infosecinstitute.com/port-scanning-using-scapy/#gref
 https://www.binarytides.com/raw-socket-programming-in-python-linux/
@@ -61,42 +54,11 @@ def listening(ip):
 
 
 
-
-
-def SYNscanner(ip,startports,finishports):
-    #conf.verb = 0
-    start = time.time()
-    closed_ports = []
-    open_ports =[]
-    close = 0
-    if listening(ip):
-        print("ip is:",listening(ip))
-        for port in range(startports,finishports+1):
-            try:
-                source_port = RandShort()
-                SYNpacket = IP(dst=ip)/TCP(sport=source_port, dport = port, flags='S')  #make a SYN packet
-                responce = sr1(SYNpacket, timeout=10) #sending the packet
-                if responce.getlayer(TCP).flags==0x12:
-                    send_rst = sr(IP(dst=ip)/TCP(sport=source_port, dport=port, flags='AR'), timeout=1) #'AR'= ACK-RST 
-                    open_ports.append(port)
-                elif responce.getlayer(TCP).flags ==0x14:
-                    closed_ports.append(port)
-            except AttributeError:
-                #print("port is not listening")
-                closed_ports.append(port)
-        timelance = time.time()- start
-        return open_ports,closed_ports,timelance
-        #print("open ports are:", open_ports)
-        #print("scan completed in {} seconds".format(timelance))
-        #print("the number of closed ports is", closed_ports)
-
-
-
 def MultiSYNscanner(ip, port):
     closed_ports = []
     open_ports =[]
     if listening(ip):
-        print("ip is:",listening(ip))
+        #print("ip is:",listening(ip))
         try:
             source_port = RandShort()
             SYNpacket = IP(dst=ip)/TCP(sport=source_port, dport = port, flags='S')  #make a SYN packet
@@ -123,9 +85,6 @@ def port_worker():
 
 
 
-
-
-
 if __name__=='__main__':
     #ip = socket.gethostbyname(input("Target to scan ->"))
     #target = 'hackthissite.org'
@@ -136,13 +95,13 @@ if __name__=='__main__':
     start_ports = 443
     finish_ports = 445
     print(ip)
-    '''
+    
     threads = []
     open_ports = []
     closed_ports = []
     q = queue.Queue()
 
-    for port in range(start_ports,finish_ports):
+    for port in range(start_ports,finish_ports+1):
         q.put(port)
 
     for i in range(1,10):
@@ -164,3 +123,4 @@ if __name__=='__main__':
     scanner = SYNscanner(ip,start_ports,finish_ports)
     print("open ports are:",scanner[0])
     print("closed ports are:",scanner[1])
+    '''
