@@ -103,9 +103,3 @@ if __name__=='__main__':
 	#print("open ports are:", scanned[0])
 	#print("scan completed in {} seconds".format(scanned[1]))
 	#print("the number of closed ports is", scanned[2])
-
-
-
-
-
-
