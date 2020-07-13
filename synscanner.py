@@ -17,12 +17,13 @@ print(logo.renderText('Rick the greek'))
 
 
 
-#https://www.binarytides.com/raw-socket-programming-in-python-linux/
+
 
 '''
 packet = IP header + TCP header + data
 https://medium.com/@NickKaramoff/tcp-packets-from-scratch-in-python-3a63f0cd59fe
 https://resources.infosecinstitute.com/port-scanning-using-scapy/#gref
+https://www.binarytides.com/raw-socket-programming-in-python-linux/
 '''
 
 
