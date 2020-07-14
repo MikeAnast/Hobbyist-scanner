@@ -2,17 +2,23 @@
 from socket import * 
 
 host = "hackthissite.org"            
-s = socket(AF_INET, SOCK_DGRAM)
 
-for port in range(10,65535):
-	#print(port)
-	try:
-		data = "Hello"
-		print("Try "+str(port))
-		s.sendto(data,(host,port))
-		s.settimeout(0)
-		print ((s.recvfrom(1024)))
-		break
-	except:
-		pass
-                        
+
+def udpscan(target,port):
+  try:
+	udpsock = socket.socket(socket.AF_INET,socket.SOCK_DGRAM)
+	udpsock.sendto("packet example",(target,port))
+	#udpcon = udpsock.connect((target,port))
+	print("the {} port is open".format(port))
+	return True
+  except:
+	print("false")
+	return False
+
+
+
+
+for port in range(1,10000):
+	udpscan(host,port)
+	
+							

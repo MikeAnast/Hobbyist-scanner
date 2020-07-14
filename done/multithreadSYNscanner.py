@@ -10,7 +10,7 @@ import threading
 
 
 logo = Figlet(font='doom')
-print(logo.renderText('Rick the greek'))
+print(logo.renderText('hobbyist scanner'))
 
 
 '''

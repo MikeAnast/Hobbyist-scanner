@@ -4,7 +4,7 @@ import threading
 import queue
 
 
-ascii_banner = pyfiglet.figlet_format("PORT SCANNER")
+ascii_banner = pyfiglet.figlet_format("Hobbyist scanner")
 print(ascii_banner)
 
 

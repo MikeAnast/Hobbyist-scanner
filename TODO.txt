@@ -1,0 +1,16 @@
+this is a test file
+https://www.binarytides.com/raw-socket-programming-in-python-linux/
+
+DONE scanners
+
+1. multithread SYN scanner
+2. multithread TCP scanner (default)
+
+
+TO DO scanners + multithread
+1. UDP scanner
+2. XMAS scanner
+3. FIN scanner
+4. NULL scanner
+5. TCP ACK scanner
+6. TCP windows scanner

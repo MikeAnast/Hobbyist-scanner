@@ -1,2 +1,0 @@
-this is a test file
-https://www.binarytides.com/raw-socket-programming-in-python-linux/
