@@ -51,7 +51,37 @@ def listening(ip):
     else:
         return True
 
+class SYNscanner:
 
+	def __init__(self,ip,port):
+		self.ip = ip
+		self.port = port
+
+	def listening(self,ip):
+	    self.icmp = IP(dst= ip)/ICMP()    #pinging the ip with the protocl ICMP to see if the IP is up
+	    self.resp = sr1(icmp,timeout=2)
+	    if self.resp ==None:
+	        return False
+	    else:
+	        return True
+
+	def MultiSYNscanner(self, ip, port):
+	    self.closed_ports = []
+	    self.open_ports =[]
+	    if listening(ip):
+	        #print("ip is:",listening(ip))
+	        try:
+	            source_port = RandShort()
+	            SYNpacket = IP(dst=self.ip)/TCP(sport=source_port, dport = port, flags='S')  #make a SYN packet
+	            responce = sr1(SYNpacket, timeout=10) #sending the packet
+	            if responce.getlayer(TCP).flags==0x12:
+	                send_rst = sr(IP(dst=ip)/TCP(sport=source_port, dport= port, flags='AR'), timeout=1) #'AR'= ACK-RST 
+	                return True
+	            elif responce.getlayer(TCP).flags ==0x14:
+	                return False        
+	        except:
+	            print("port is not listening")
+	            return False
 
 
 def MultiSYNscanner(ip, port):
@@ -99,6 +129,7 @@ if __name__=='__main__':
     threads = []
     open_ports = []
     closed_ports = []
+    
     q = queue.Queue()
 
     for port in range(start_ports,finish_ports+1):
@@ -120,6 +151,14 @@ if __name__=='__main__':
     print('open ports',open_ports)
     print('closed ports',closed_ports)
     '''
+    port = 443
+    result =  SYNscanner(ip,port)
+
+    result.MultiSYNscanner()
+
+
+
+    
     scanner = SYNscanner(ip,start_ports,finish_ports)
     print("open ports are:",scanner[0])
     print("closed ports are:",scanner[1])
